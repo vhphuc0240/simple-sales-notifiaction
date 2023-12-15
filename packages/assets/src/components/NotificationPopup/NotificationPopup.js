@@ -2,13 +2,14 @@ import React from 'react';
 import './NoticationPopup.scss';
 import moment from 'moment';
 import {truncateString} from '@assets/helpers/utils/trucateString';
+import PropTypes from 'prop-types';
 
 const NotificationPopup = ({
   firstName = 'John Doe',
   city = 'New York',
   country = 'United States',
   productName = 'Puffer Jacket With Hidden Hood',
-  timestamp = 'a day ago',
+  timestamp = Date.now(),
   productImage = 'http://paris.mageplaza.com/images/shop/single/big-1.jpg',
   settings = {truncateProductName: true, hideTimeAgo: false}
 }) => {
@@ -45,6 +46,17 @@ const NotificationPopup = ({
   );
 };
 
-NotificationPopup.propTypes = {};
+NotificationPopup.propTypes = {
+  firstName: PropTypes.string,
+  city: PropTypes.string,
+  country: PropTypes.string,
+  productName: PropTypes.string,
+  timestamp: PropTypes.number,
+  productImage: PropTypes.string,
+  settings: PropTypes.shape({
+    truncateProductName: PropTypes.bool,
+    hideTimeAgo: PropTypes.bool
+  })
+};
 
 export default NotificationPopup;
