@@ -1,7 +1,5 @@
 import React, {useCallback, useState} from 'react';
 import {Card, Layout, Page, Tabs} from '@shopify/polaris';
-import NotificationCard from '@assets/components/NotificationCard/NotificationCard';
-import DesktopPositionInput from '@assets/components/DesktopPositionInput/DesktopPositionInput';
 import {defaultSettings} from '@assets/helpers/defaultSettings';
 import DisplayTab from '@assets/pages/Settings/components/DisplayTab/DisplayTab';
 import TriggerTab from '@assets/pages/Settings/components/TriggerTab/TriggerTab';
@@ -31,13 +29,15 @@ export default function Settings() {
       id: 'display',
       content: 'Display',
       accessibilityLabel: 'Display',
-      panelID: 'display'
+      panelID: 'display',
+      child: <DisplayTab settings={settings} onChangeInput={onChangeInput} />
     },
     {
       id: 'triggers',
       content: 'Triggers',
       accessibilityLabel: 'Triggers',
-      panelID: 'triggers'
+      panelID: 'triggers',
+      child: <TriggerTab settings={settings} onChangeInput={onChangeInput} />
     }
   ];
   return (
@@ -68,11 +68,7 @@ export default function Settings() {
         <Layout.Section>
           <Card sectioned>
             <Tabs tabs={tabs} selected={selectedTab} onSelect={handleTabChange}>
-              {selectedTab === 1 ? (
-                <TriggerTab settings={settings} onChangeInput={onChangeInput} />
-              ) : (
-                <DisplayTab settings={settings} onChangeInput={onChangeInput} />
-              )}
+              {tabs[selectedTab]?.child}
             </Tabs>
           </Card>
         </Layout.Section>
