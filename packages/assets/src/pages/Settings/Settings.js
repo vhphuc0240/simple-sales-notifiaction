@@ -1,18 +1,22 @@
 import React, {useCallback, useState} from 'react';
 import {Card, Layout, Page, Tabs} from '@shopify/polaris';
-import {defaultSettings} from '@assets/helpers/defaultSettings';
 import DisplayTab from '@assets/pages/Settings/components/DisplayTab/DisplayTab';
 import TriggerTab from '@assets/pages/Settings/components/TriggerTab/TriggerTab';
 import NotificationPopup from '@assets/components/NotificationPopup/NotificationPopup';
+import useFetchApi from '@assets/hooks/api/useFetchApi';
+import useEditApi from '@assets/hooks/api/useEditApi';
 
 /**
  * @return {JSX.Element}
  */
 export default function Settings() {
-  const [settings, setSettings] = useState(defaultSettings);
-  const handleSaveSettings = () => {
-    console.log('saved');
-    console.log(settings);
+  const {data: settings, setData: setSettings} = useFetchApi({url: '/settings'});
+  const {editing, handleEdit} = useEditApi({
+    url: '/settings',
+    data: settings
+  });
+  const handleSaveSettings = async () => {
+    await handleEdit(settings);
   };
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -45,7 +49,7 @@ export default function Settings() {
       fullWidth
       title="Settings"
       subtitle="Decide how your notifications will display"
-      primaryAction={{content: 'Save', onClick: handleSaveSettings}}
+      primaryAction={{content: 'Save', onClick: handleSaveSettings, loading: editing}}
     >
       <Layout>
         <Layout.Section oneThird>
@@ -56,7 +60,7 @@ export default function Settings() {
               productName={'Product 1'}
               country={'USA'}
               productId={'123456'}
-              timestamp={Date.now().toString()}
+              timestamp={Date.now()}
               productImage={'https://picsum.photos/70'}
               settings={{
                 truncateProductName: settings.truncateProductName,
