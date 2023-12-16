@@ -1,19 +1,10 @@
-import {getShopById} from '@avada/shopify-auth';
-import Shopify from 'shopify-api-node';
+const FUNCTION_URL = 'https://5cf0-2a09-bac5-d45f-16d2-00-246-2a.ngrok-free.app';
 
 async function getProductById(shopify, productId) {
   return await shopify.product.get(productId);
 }
 
-export async function getNotifications(shopId) {
-  const shopData = await getShopById(shopId);
-  const shopify = new Shopify({
-    accessToken: shopData.accessToken,
-    shopName: shopData.shopifyDomain
-  });
-  const orders = await shopify.order.list({
-    status: 'active'
-  });
+export async function parseOrdersToNotifications(shopify, orders) {
   return await Promise.all(
     orders.map(async order => {
       const product = await getProductById(shopify, order.line_items[0].product_id);
@@ -31,6 +22,21 @@ export async function getNotifications(shopId) {
   );
 }
 
+export async function getNotifications(shopify) {
+  const orders = await shopify.order.list({
+    status: 'active'
+  });
+  return parseOrdersToNotification(shopify, orders);
+}
+
 export async function registerScriptTags() {}
 
-export async function registerWebhook() {}
+export async function registerWebhook(shopify) {
+  const webhook = {
+    topic: 'orders/create',
+    address: `${FUNCTION_URL}/webhook/order/new`,
+    format: 'json'
+  };
+  await shopify.webhook.create(webhook);
+  return webhook;
+}
