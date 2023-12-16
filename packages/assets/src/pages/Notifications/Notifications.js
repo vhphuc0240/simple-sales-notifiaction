@@ -1,81 +1,64 @@
-import React, {useState} from 'react';
-import {Card, Page, ResourceItem, ResourceList, Stack} from '@shopify/polaris';
-import NotificationCard from '@assets/components/NotificationCard/NotificationCard';
+import React, {useEffect, useState} from 'react';
+import {
+  Card,
+  FormLayout,
+  Page,
+  Pagination,
+  ResourceItem,
+  ResourceList,
+  Stack
+} from '@shopify/polaris';
 import moment from 'moment/moment';
 import NotificationPopup from '@assets/components/NotificationPopup/NotificationPopup';
+import usePaginate from '@assets/hooks/api/usePaginate';
 
-const NotificationSamples = [
-  {
-    id: 1,
-    fistName: 'John',
-    city: 'New York',
-    productName: 'Product 1',
-    country: 'USA',
-    productId: '123456',
-    timestamp: Date.now(),
-    productImage: 'https://picsum.photos/70'
-  },
-  {
-    id: 2,
-    fistName: 'John 2',
-    city: 'New York',
-    productName: 'Product 2',
-    country: 'USA',
-    productId: '123456',
-    timestamp: Date.now(),
-    productImage: 'https://picsum.photos/70'
-  },
-  {
-    id: 3,
-    fistName: 'John',
-    city: 'New York',
-    productName: 'Product 3',
-    country: 'USA',
-    productId: '123456',
-    timestamp: Date.now(),
-    productImage: 'https://picsum.photos/70'
-  },
-  {
-    id: 4,
-    fistName: 'John 3',
-    city: 'New York',
-    productName: 'Product 4',
-    country: 'USA',
-    productId: '123456',
-    timestamp: Date.now(),
-    productImage: 'https://picsum.photos/70'
-  }
-];
 export default function Notifications() {
+  const [sortValue, setSortValue] = useState('timestamp:desc');
+  const {data, onQueryChange, pageInfo, prevPage, nextPage} = usePaginate({
+    url: '/notifications',
+    initQueries: {
+      sort: sortValue
+    }
+  });
+  useEffect(() => {
+    onQueryChange('sort', sortValue, true);
+  }, [sortValue]);
+
   const [selectedNotifications, setSelectedNotifications] = useState([]);
   const resolveItemIds = ({id}) => {
     return id;
   };
+
   return (
     <Page fullWidth title="Notifications" subtitle="List of sales notifcation from Shopify">
       <Card>
         <ResourceList
-          items={NotificationSamples}
+          items={data}
           resourceName={{singular: 'notification', plural: 'notifications'}}
           selectedItems={selectedNotifications}
           onSelectionChange={setSelectedNotifications}
           resolveItemId={resolveItemIds}
-          totalItemsCount={NotificationSamples.length}
+          totalItemsCount={data.length}
           showHeader
           selectable
           sortOptions={[
             {
               label: 'Newest update',
-              value: 'newest'
+              value: 'timestamp:desc'
+            },
+            {
+              label: 'Oldest update',
+              value: 'timestamp:asc'
             }
           ]}
-          onSortChange={() => console.log('log')}
+          sortValue={sortValue}
+          onSortChange={setSortValue}
           renderItem={notification => (
             <ResourceItem id={notification.id}>
               <Stack alignment="center" distribution="equalSpacing">
                 <Stack.Item>
                   <NotificationPopup
-                    firstName={notification.fistName}
+                    firstName={notification.firstName}
                     productName={notification.productName}
                     city={notification.city}
                     productImage={notification.productImage}
@@ -91,6 +74,16 @@ export default function Notifications() {
           )}
         />
       </Card>
+      <FormLayout>
+        <Stack distribution="center">
+          <Pagination
+            hasNext={pageInfo.hasNext}
+            hasPrevious={pageInfo.hasPrev}
+            onNext={nextPage}
+            onPrevious={prevPage}
+          />
+        </Stack>
+      </FormLayout>
     </Page>
   );
 }
