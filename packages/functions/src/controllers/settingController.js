@@ -7,7 +7,6 @@ import {getCurrentShop} from '@functions/helpers/auth';
 export async function getShopSettingsById(ctx) {
   const shopId = getCurrentShop(ctx);
   const shopSettings = await getShopSettingsByShopId(shopId);
-  console.log(shopSettings);
   ctx.body = {data: shopSettings, success: true};
 }
 

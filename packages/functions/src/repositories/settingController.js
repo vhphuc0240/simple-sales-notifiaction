@@ -16,11 +16,14 @@ export async function addSettingsForShopByShopId(shopId, data) {
 
 const getShopSettings = async shopId => {
   try {
-    const shopSettingsSnap = await shopSettingsRef.doc(shopId).get();
-    if (!shopSettingsSnap.exists) {
+    const shopSettingsSnap = await shopSettingsRef.where('shopId', '==', shopId).get();
+    if (shopSettingsSnap.empty) {
       return null;
     }
-    return shopSettingsSnap.data();
+    return shopSettingsSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
   } catch (e) {
     console.log(e);
     return null;
@@ -34,7 +37,8 @@ const getShopSettings = async shopId => {
  * @return {Promise<FirebaseFirestore.DocumentData>}
  */
 export async function getShopSettingsByShopId(shopId) {
-  return await getShopSettings(shopId);
+  const shopSettings = await getShopSettings(shopId);
+  return shopSettings[0];
 }
 
 export async function updateShopSettingsByShopId(shopId, data) {
