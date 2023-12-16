@@ -1,8 +1,8 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 name = "Mage Traning App"
-client_id = "844e019bca8308b8d2d83e8cc92c1e5b"
-application_url = "https://at-mistakes-ant-lyric.trycloudflare.com/auth/shopify"
+client_id = "df04981af0a91616c20e53f8b2c8891d"
+application_url = "https://info-revenge-personality-accept.trycloudflare.com/auth/shopify"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ use_legacy_install_flow = true
 
 [auth]
 redirect_urls = [
-  "https://at-mistakes-ant-lyric.trycloudflare.com/auth/shopify/callback",
-  "https://at-mistakes-ant-lyric.trycloudflare.com/authSa/shopify/callback",
-  "https://at-mistakes-ant-lyric.trycloudflare.com/auth/shopify/embed/callback",
+  "https://info-revenge-personality-accept.trycloudflare.com/auth/shopify/callback",
+  "https://info-revenge-personality-accept.trycloudflare.com/authSa/shopify/callback",
+  "https://info-revenge-personality-accept.trycloudflare.com/auth/shopify/embed/callback",
   "https://localhost:3000/auth/shopify/callback",
   "https://localhost:3000/authSa/shopify/callback",
   "https://localhost:3000/auth/shopify/embed/callback"
