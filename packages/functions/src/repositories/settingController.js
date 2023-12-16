@@ -4,6 +4,16 @@ const firestore = new Firestore();
 /** @type CollectionReference */
 const shopSettingsRef = firestore.collection('settings');
 
+export async function addSettingsForShopByShopId(shopId, data) {
+  try {
+    await shopSettingsRef.add({shopId: shopId, ...data});
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
 const getShopSettings = async shopId => {
   try {
     const shopSettingsSnap = await shopSettingsRef.doc(shopId).get();

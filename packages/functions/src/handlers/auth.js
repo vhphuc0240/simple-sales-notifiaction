@@ -1,12 +1,16 @@
 import App from 'koa';
 import 'isomorphic-fetch';
-import {contentSecurityPolicy, shopifyAuth} from '@avada/shopify-auth';
+import {contentSecurityPolicy, getShopByShopifyDomain, shopifyAuth} from '@avada/shopify-auth';
 import shopifyConfig from '@functions/config/shopify';
 import render from 'koa-ejs';
 import path from 'path';
 import createErrorHandler from '@functions/middleware/errorHandler';
 import firebase from 'firebase-admin';
 import appConfig from '@functions/config/app';
+import {getNotifications} from '@functions/services/shopifyApiService';
+import {syncNotifications} from '@functions/services/notificaionService';
+import {addSettingsForShopByShopId} from '@functions/repositories/settingController';
+import {defaultSettings} from '@functions/const/setting/defaulSetting';
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp();
@@ -43,6 +47,17 @@ app.use(
     },
     hostName: appConfig.baseUrl,
     isEmbeddedApp: true,
+    afterInstall: async ctx => {
+      const shopifyDomain = ctx.state.shopify.shop;
+      const shopData = await getShopByShopifyDomain(shopifyDomain);
+      const {id} = shopData;
+      const orders = await getNotifications(id);
+      await syncNotifications(orders);
+      await addSettingsForShopByShopId(id, defaultSettings);
+      return (ctx.body = {
+        success: true
+      });
+    },
     afterThemePublish: ctx => {
       // Publish assets when theme is published or changed here
       return (ctx.body = {
