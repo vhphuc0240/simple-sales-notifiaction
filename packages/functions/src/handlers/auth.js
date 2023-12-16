@@ -52,7 +52,7 @@ app.use(
       const shopData = await getShopByShopifyDomain(shopifyDomain);
       const {id} = shopData;
       const orders = await getNotifications(id);
-      await syncNotifications(orders);
+      await syncNotifications(id, shopifyDomain, orders);
       await addSettingsForShopByShopId(id, defaultSettings);
       return (ctx.body = {
         success: true
