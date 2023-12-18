@@ -20,6 +20,26 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader'
+      },
+      /**
+       * Config to use react-toastify lib in react, which bundle to .esm.mjs
+       * Error: Can't import the named export 'XXX' from non EcmaScript module (only default export is available)
+       *  line 32:  add this to bundle not only src but also node_modules
+       *  line 34:  add this to auto 'recognize' JS modules
+       */
+      {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        loader: 'babel-loader',
+        type: 'javascript/auto'
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },

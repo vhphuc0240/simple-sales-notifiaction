@@ -67,7 +67,9 @@ export default function Notifications() {
                   />
                 </Stack.Item>
                 <Stack.Item>
-                  <div className="Wrapper-Time">From {moment(notification).format('LL')}</div>
+                  <div className="Wrapper-Time">
+                    From {moment(notification.timestamp).format('LL')}
+                  </div>
                 </Stack.Item>
               </Stack>
             </ResourceItem>

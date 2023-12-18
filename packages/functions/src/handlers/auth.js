@@ -7,7 +7,11 @@ import path from 'path';
 import createErrorHandler from '@functions/middleware/errorHandler';
 import firebase from 'firebase-admin';
 import appConfig from '@functions/config/app';
-import {getNotifications, registerWebhook} from '@functions/services/shopifyApiService';
+import {
+  getNotifications,
+  registerScriptTags,
+  registerWebhook
+} from '@functions/services/shopifyApiService';
 import {syncNotifications} from '@functions/services/notificaionService';
 import {addSettingsForShopByShopId} from '@functions/repositories/settingController';
 import {defaultSettings} from '@functions/const/setting/defaulSetting';
@@ -58,8 +62,9 @@ app.use(
       });
       const orders = await getNotifications(shopify);
       await syncNotifications(id, shopifyDomain, orders);
-      await addSettingsForShopByShopId(id, defaultSettings);
+      await addSettingsForShopByShopId(id, shopifyDomain, defaultSettings);
       await registerWebhook(shopify);
+      await registerScriptTags(shopify);
       return (ctx.body = {
         success: true
       });
