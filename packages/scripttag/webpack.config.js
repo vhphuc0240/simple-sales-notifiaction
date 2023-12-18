@@ -13,7 +13,7 @@ module.exports = {
   entry: ['./src/index.js'],
   output: {
     path: path.resolve(__dirname, '../../static/scripttag'),
-    filename: 'index.min.js'
+    filename: 'test-notifications.js'
   },
   module: {
     rules: [
