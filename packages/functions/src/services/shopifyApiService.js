@@ -1,4 +1,4 @@
-const FUNCTION_URL = 'https://5cf0-2a09-bac5-d45f-16d2-00-246-2a.ngrok-free.app';
+const FUNCTION_URL = ' https://4e1d-2a09-bac1-7aa0-50-00-246-81.ngrok-free.app';
 
 async function getProductById(shopify, productId) {
   return await shopify.product.get(productId);
@@ -16,7 +16,7 @@ export async function parseOrdersToNotifications(shopify, orders) {
         productId: order.line_items[0].product_id,
         productTitle: order.line_items[0].title,
         productImage: product.image.src,
-        timestamp: new Date(order.created_at).getTime() / 1000
+        timestamp: new Date(order.created_at).getTime()
       };
     })
   );
@@ -26,10 +26,15 @@ export async function getNotifications(shopify) {
   const orders = await shopify.order.list({
     status: 'active'
   });
-  return parseOrdersToNotification(shopify, orders);
+  return parseOrdersToNotifications(shopify, orders);
 }
 
-export async function registerScriptTags() {}
+export async function registerScriptTags(shopify) {
+  await shopify.scriptTag.create({
+    event: 'onload',
+    src: 'https://localhost:3000/scripttag/index.min.js'
+  });
+}
 
 export async function registerWebhook(shopify) {
   const webhook = {

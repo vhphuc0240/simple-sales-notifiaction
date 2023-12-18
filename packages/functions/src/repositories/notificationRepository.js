@@ -42,3 +42,16 @@ export async function getNotificationsByShopId(shopId, {perPage, page, sort}) {
     return {data: [], count: 0, hasPre: false, hasNext: true, error: e.message};
   }
 }
+
+export async function getNotificationsByShopDomain(shopDomain) {
+  try {
+    const notificationSnapshot = await notificationsRef.where('shopDomain', '==', shopDomain).get();
+    return notificationSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (e) {
+    console.error(e);
+    return {data: [], error: e.message};
+  }
+}

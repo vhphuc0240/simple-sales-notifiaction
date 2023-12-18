@@ -4,9 +4,9 @@ const firestore = new Firestore();
 /** @type CollectionReference */
 const shopSettingsRef = firestore.collection('settings');
 
-export async function addSettingsForShopByShopId(shopId, data) {
+export async function addSettingsForShopByShopId(shopId, shopifyDomain, data) {
   try {
-    await shopSettingsRef.add({shopId: shopId, ...data});
+    await shopSettingsRef.add({shopId: shopId, shopDomain: shopifyDomain, ...data});
     return true;
   } catch (e) {
     console.log(e);
@@ -29,6 +29,22 @@ const getShopSettings = async shopId => {
     return null;
   }
 };
+
+export async function getShopSettingsByShopDomain(shopDomain) {
+  try {
+    const shopSettingsSnap = await shopSettingsRef.where('shopDomain', '==', shopDomain).get();
+    if (shopSettingsSnap.empty) {
+      return null;
+    }
+    return shopSettingsSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
 
 /**
  * Get shop settings by given shop ID
