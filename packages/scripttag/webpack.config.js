@@ -15,11 +15,17 @@ module.exports = {
     path: path.resolve(__dirname, '../../static/scripttag'),
     filename: 'test-notifications.js'
   },
+  resolve: {
+    alias: {
+      '@assets': path.resolve(__dirname, '../../packages/assets/src/')
+    }
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader'
+        test: /\.(js|jsx)$/,
+        loader: 'babel-loader',
+        options: {presets: ['@babel/env', '@babel/preset-react']}
       },
       /**
        * Config to use react-toastify lib in react, which bundle to .esm.mjs
