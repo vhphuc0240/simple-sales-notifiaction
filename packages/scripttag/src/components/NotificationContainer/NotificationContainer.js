@@ -34,15 +34,19 @@ const NotificationContainer = ({notifications, settings}) => {
         {
           containerId: 'Test-Notifications',
           toastId: id,
-          delay: firstDelay * 1000 + popsInterval * 1000 * index,
-          autoClose: Number(displayDuration)
+          delay: firstDelay * 1000 + popsInterval * 1000 * index
         }
       );
     });
   }, []);
   return (
     <div>
-      <ToastContainer limit={maxPopsDisplay} newestOnTop position={position} />
+      <ToastContainer
+        limit={maxPopsDisplay}
+        newestOnTop
+        position={position}
+        autoClose={+Number(displayDuration) * 1000}
+      />
     </div>
   );
 };

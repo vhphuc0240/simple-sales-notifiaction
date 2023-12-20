@@ -61,7 +61,7 @@ export async function createMetaFields(shopId, shopify) {
     key: 'settings_attributes',
     namespace: 'shopify_shop_settings',
     ownerId: currentAppInstallationId,
-    type: 'string',
+    type: 'json_string',
     value: JSON.stringify(settings),
     ownerResource: 'shop'
   });
