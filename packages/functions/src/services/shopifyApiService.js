@@ -1,3 +1,5 @@
+import {getShopSettingsByShopId} from '@functions/repositories/settingRepository';
+
 const FUNCTION_URL = ' https://4e1d-2a09-bac1-7aa0-50-00-246-81.ngrok-free.app';
 
 async function getProductById(shopify, productId) {
@@ -44,4 +46,23 @@ export async function registerWebhook(shopify) {
   };
   await shopify.webhook.create(webhook);
   return webhook;
+}
+
+export async function createMetaFields(shopId, shopify) {
+  const settings = await getShopSettingsByShopId(shopId);
+  const query = `{
+        currentAppInstallation {
+          id
+        }
+    }`;
+  const graphqlRes = await shopify.graphql(query);
+  const currentAppInstallationId = graphqlRes.currentAppInstallation.id;
+  await shopify.metafield.create({
+    key: 'settings_attributes',
+    namespace: 'shopify_shop_settings',
+    ownerId: currentAppInstallationId,
+    type: 'string',
+    value: JSON.stringify(settings),
+    ownerResource: 'shop'
+  });
 }

@@ -1,4 +1,4 @@
-import {getShopSettingsByShopDomain} from '@functions/repositories/settingController';
+import {getShopSettingsByShopDomain} from '@functions/repositories/settingRepository';
 import {getNotificationsByShopDomain} from '@functions/repositories/notificationRepository';
 
 export async function getShopDataByShopDomain(ctx) {

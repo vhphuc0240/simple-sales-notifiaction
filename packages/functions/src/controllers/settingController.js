@@ -1,7 +1,7 @@
 import {
   getShopSettingsByShopId,
   updateShopSettingsByShopId
-} from '@functions/repositories/settingController';
+} from '@functions/repositories/settingRepository';
 import {getCurrentShop} from '@functions/helpers/auth';
 
 export async function getShopSettingsById(ctx) {
